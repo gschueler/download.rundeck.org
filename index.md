@@ -3,6 +3,8 @@ title: download.rundeck.org
 layout: main
 ---
 
-## download.rundeck.org
-
 Downloads for [rundeck](http://rundeck.org)
+
+* [RPM](rpm/index.html)
+* [deb](deb/index.html)
+* [jar](jar/index.html)

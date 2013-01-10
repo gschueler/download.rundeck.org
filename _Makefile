@@ -1,0 +1,29 @@
+
+.PHONY: sitetest site list release
+
+sitetest: _site
+	s3cmd sync -n _site/ s3://download.rundeck.org
+
+site:
+	s3cmd sync _site/ s3://download.rundeck.org
+
+list:
+	for i in deb rpm jar ; do \
+	s3cmd ls s3://download.rundeck.org/$${i}/ | grep  -e "\.$${i}" > _$${i}.list ; \
+	sort -r _$${i}.list | perl _list.pl > $${i}/_list.md ; \
+	cat $${i}/_index.md $${i}/_list.md > $${i}/index.md ; \
+	done
+
+jekyll:
+	jekyll
+
+release:
+	echo $(DIR)/release-$(VERSION)
+	[ -d "$(DIR)/release-$(VERSION)" ] || ( echo "DIR and VERSION required " ; false )
+	echo "Uploading rundeck-launcher..."
+	s3cmd put $(DIR)/release-$(VERSION)/rundeck-launcher-$(VERSION).jar s3://download.rundeck.org/jar/
+	echo "Uploading rundeck rpms..."
+	s3cmd put $(DIR)/release-$(VERSION)/rundeck-$(VERSION)*.rpm s3://download.rundeck.org/rpm/
+	s3cmd put $(DIR)/release-$(VERSION)/rundeck-config-$(VERSION)*.rpm s3://download.rundeck.org/rpm/
+	echo "Uploading rundeck-deb..."
+	s3cmd put $(DIR)/release-$(VERSION)/rundeck-$(VERSION)*.deb s3://download.rundeck.org/deb/
