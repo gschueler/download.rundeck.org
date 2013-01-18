@@ -1,11 +1,14 @@
 
-.PHONY: sitetest site list release
+.PHONY: sitetest site list release clean jekyll
 
 sitetest: _site
 	s3cmd sync -n _site/ s3://download.rundeck.org
 
 site:
 	s3cmd sync _site/ s3://download.rundeck.org
+
+clean:
+	rm -rf _site
 
 list:
 	for i in deb rpm jar ; do \
