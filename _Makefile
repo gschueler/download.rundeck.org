@@ -4,7 +4,7 @@
 sitetest: _site
 	s3cmd sync -n _site/ s3://download.rundeck.org
 
-site:
+site: _site
 	s3cmd sync _site/ s3://download.rundeck.org
 
 clean:
@@ -17,7 +17,7 @@ list:
 	cat $${i}/_index.md $${i}/_list.md > $${i}/index.md ; \
 	done
 
-jekyll:
+_site: clean list
 	jekyll
 
 release:
